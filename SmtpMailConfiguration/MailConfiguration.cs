@@ -7,6 +7,7 @@ namespace SmtpMailConfiguration
 {
     public class MailConfiguration
     {
+
         private readonly SmtpSection _smtpSection;
 
         /// <summary>
