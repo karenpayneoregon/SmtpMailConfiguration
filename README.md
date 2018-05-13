@@ -1,0 +1,1 @@
+# Code to configure SmtpClient settings in a project configuration file.
