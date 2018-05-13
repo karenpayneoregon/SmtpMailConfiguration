@@ -1,0 +1,12 @@
+Coded in VS2013 Framework 4.5
+
+
+<system.net>
+  <mailSettings>
+    <smtp  from="xxxxx">
+      <network host="xxxxx" port="xxxxx"  userName="xxxxx" password="xxxxx"/>
+      <specifiedPickupDirectory pickupDirectoryLocation="C:\Dotnet_Development\EmailPickupFolder" />
+    </smtp>
+  </mailSettings>
+</system.net>
+<userSettings>

@@ -1,0 +1,83 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="WindowsFormsApplication1.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="DemoHtmlMessage" Type="System.String" Scope="User">
+      <Value Profile="(Default)">&lt;html&gt;&lt;body&gt;&lt;left&gt;&lt;table border='1' cellpadding='0' cellspacing='0'&gt; 
+&lt;tr&gt; 
+&lt;td align='left' valign='middle'&gt;Reference&lt;/td&gt; 
+&lt;td align='left' valign='middle'&gt;Exporter&lt;/td&gt; 
+&lt;td align='left' valign='middle'&gt;EPU&lt;/td&gt; 
+&lt;td align='left' valign='middle'&gt;Entry&lt;/td&gt; 
+&lt;td align='left' valign='middle'&gt;Date&lt;/td&gt; 
+&lt;td align='left' valign='middle'&gt;MRN&lt;/td&gt; 
+&lt;td align='left' valign='middle'&gt;Vehicle&lt;/td&gt; 
+&lt;td align='left' valign='middle'&gt;Pkgs&lt;/td&gt; 
+&lt;td align='left' valign='middle'&gt;Gross&lt;/td&gt; 
+&lt;td align='left' valign='middle'&gt;Route&lt;/td&gt; 
+&lt;tr&gt; 
+&lt;tr&gt; 
+&lt;td align='left' valign='middle'&gt;DE124315A&lt;/td&gt; 
+&lt;td align='left' valign='middle'&gt;EUROPRIDE LTD&lt;/td&gt; 
+&lt;td align='left' valign='middle'&gt;011&lt;/td&gt; 
+&lt;td align='left' valign='middle'&gt;A02582W&lt;/td&gt; 
+&lt;td align='left' valign='middle'&gt;15/03/16 00:00:00&lt;/td&gt; 
+&lt;td align='left' valign='middle'&gt;16GB03X57775707030&lt;/td&gt; 
+&lt;td align='left' valign='middle'&gt;AB84GYR / AB62GIR&lt;/td&gt; 
+&lt;td align='left' valign='middle'&gt;&lt;/td&gt; 
+&lt;td align='left' valign='middle'&gt;3378.500&lt;/td&gt; 
+&lt;td align='left' valign='middle'&gt;6&lt;/td&gt; 
+&lt;/tr&gt; 
+&lt;tr&gt; 
+&lt;td align='left' valign='middle'&gt;DE124315B&lt;/td&gt; 
+&lt;td align='left' valign='middle'&gt;EUROPRIDE LTD&lt;/td&gt; 
+&lt;td align='left' valign='middle'&gt;011&lt;/td&gt; 
+&lt;td align='left' valign='middle'&gt;A02585F&lt;/td&gt; 
+&lt;td align='left' valign='middle'&gt;15/03/16 00:00:00&lt;/td&gt; 
+&lt;td align='left' valign='middle'&gt;16GB03X57775961017&lt;/td&gt; 
+&lt;td align='left' valign='middle'&gt;AB84GYR / AB62GIR&lt;/td&gt; 
+&lt;td align='left' valign='middle'&gt;&lt;/td&gt; 
+&lt;td align='left' valign='middle'&gt;2970.000&lt;/td&gt; 
+&lt;td align='left' valign='middle'&gt;6&lt;/td&gt; 
+&lt;/tr&gt; 
+&lt;tr&gt; 
+&lt;td align='left' valign='middle'&gt;DE124315C&lt;/td&gt; 
+&lt;td align='left' valign='middle'&gt;EUROPRIDE LTD&lt;/td&gt; 
+&lt;td align='left' valign='middle'&gt;011&lt;/td&gt; 
+&lt;td align='left' valign='middle'&gt;A02587V&lt;/td&gt; 
+&lt;td align='left' valign='middle'&gt;15/03/16 00:00:00&lt;/td&gt; 
+&lt;td align='left' valign='middle'&gt;16GB03X57776136010&lt;/td&gt; 
+&lt;td align='left' valign='middle'&gt;AB84GYR / AB62GIR&lt;/td&gt; 
+&lt;td align='left' valign='middle'&gt;&lt;/td&gt; 
+&lt;td align='left' valign='middle'&gt;5080.250&lt;/td&gt; 
+&lt;td align='left' valign='middle'&gt;6&lt;/td&gt; 
+&lt;/tr&gt; 
+&lt;tr&gt; 
+&lt;td align='left' valign='middle'&gt;DE124315D&lt;/td&gt; 
+&lt;td align='left' valign='middle'&gt;EUROPRIDE LTD&lt;/td&gt; 
+&lt;td align='left' valign='middle'&gt;011&lt;/td&gt; 
+&lt;td align='left' valign='middle'&gt;A02590B&lt;/td&gt; 
+&lt;td align='left' valign='middle'&gt;15/03/16 00:00:00&lt;/td&gt; 
+&lt;td align='left' valign='middle'&gt;16GB03X57776358011&lt;/td&gt; 
+&lt;td align='left' valign='middle'&gt;AB84GYR / AB62GIR&lt;/td&gt; 
+&lt;td align='left' valign='middle'&gt;&lt;/td&gt; 
+&lt;td align='left' valign='middle'&gt;3415.000&lt;/td&gt; 
+&lt;td align='left' valign='middle'&gt;6&lt;/td&gt; 
+&lt;/tr&gt; 
+&lt;tr&gt; 
+&lt;td align='left' valign='middle'&gt;DE124315E&lt;/td&gt; 
+&lt;td align='left' valign='middle'&gt;OLD DOVER TEXTILES LTD&lt;/td&gt; 
+&lt;td align='left' valign='middle'&gt;011&lt;/td&gt; 
+&lt;td align='left' valign='middle'&gt;A02593J&lt;/td&gt; 
+&lt;td align='left' valign='middle'&gt;15/03/16 00:00:00&lt;/td&gt; 
+&lt;td align='left' valign='middle'&gt;16GB03X57776630011&lt;/td&gt; 
+&lt;td align='left' valign='middle'&gt;AB84GYR / AB62GIR&lt;/td&gt; 
+&lt;td align='left' valign='middle'&gt;&lt;/td&gt; 
+&lt;td align='left' valign='middle'&gt;1241.500&lt;/td&gt; 
+&lt;td align='left' valign='middle'&gt;6&lt;/td&gt; 
+&lt;/tr&gt; 
+&lt;/table&gt;&lt;/left&gt;&lt;/body&gt;&lt;/html&gt; 
+</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
