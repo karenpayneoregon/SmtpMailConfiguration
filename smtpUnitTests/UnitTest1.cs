@@ -19,6 +19,9 @@ namespace smtpUnitTests
     [TestClass]
     public class UnitTest1 :TestBase
     {
+        /// <summary>
+        /// Remove any files generated for test method UsePickupFolderExample
+        /// </summary>
         [TestInitialize]
         public void Init()
         {
@@ -33,7 +36,7 @@ namespace smtpUnitTests
         #region send email (there are no asserts)
 
         /// <summary>
-        /// Send a canned email message, see comments in 
+        /// Send a canned email messages from database table, see comments in 
         /// <see cref="MailLibrary.Operations.ExampleSend1"/>
         /// </summary>
         /// <remarks>
@@ -60,9 +63,10 @@ namespace smtpUnitTests
         [TestTraits(Trait.SendingLiveSynchronous)]
         public void ExampleWithReplyTo()
         {
-            var ops = new Operations();
 
+            var ops = new Operations();
             ops.ExampleSendWithRepyToList(GmailConfiguration2, SendMessageToAddress, 1);
+
         }
         /// <summary>
         /// Example for friendly names for FROM and TO addresses
@@ -129,7 +133,9 @@ namespace smtpUnitTests
         #endregion
 
         #region configuration tests
-
+        /// <summary>
+        /// Test gmail from address in configuration file
+        /// </summary>
         [TestMethod]
         [TestTraits(Trait.Configuration)]
         public void GMailFrom1()
@@ -138,6 +144,9 @@ namespace smtpUnitTests
             Assert.IsTrue(mc.FromAddress == "someone@gmail.com",
                 "Wrong from address for gmail 1");
         }
+        /// <summary>
+        /// Test gmail from address in configuration file
+        /// </summary>
         [TestMethod]
         [TestTraits(Trait.Configuration)]
         public void GMailFrom2()
@@ -146,6 +155,9 @@ namespace smtpUnitTests
             Assert.IsTrue(mc.FromAddress == "karenpayneoregon@gmail.com",
                 "Wrong from address for gmail 2");
         }
+        /// <summary>
+        /// Test gmail user name in configuration file
+        /// </summary>
         [TestMethod]
         [TestTraits(Trait.Configuration)]
         public void GMailUserName1()
@@ -155,6 +167,9 @@ namespace smtpUnitTests
                 "Wrong user name for gmail");
 
         }
+        /// <summary>
+        /// Test gmail user name in configuration file
+        /// </summary>
         [TestMethod]
         [TestTraits(Trait.Configuration)]
         public void GMailUserName2()
@@ -164,6 +179,9 @@ namespace smtpUnitTests
                 "Wrong user name for gmail 2");
 
         }
+        /// <summary>
+        /// Test gmail host in configuration file
+        /// </summary>
         [TestMethod]
         [TestTraits(Trait.Configuration)]
         public void GMailHost1()
@@ -172,6 +190,9 @@ namespace smtpUnitTests
             Assert.IsTrue(mc.Host == "smtp.gmail.com",
                 "Wrong host for gmail 1");
         }
+        /// <summary>
+        /// Test gmail port in configuration file
+        /// </summary>
         [TestMethod]
         [TestTraits(Trait.Configuration)]
         public void GMailPort1()
@@ -180,6 +201,9 @@ namespace smtpUnitTests
             Assert.IsTrue(mc.Port == 587,
                 "Wrong port for gmail");
         }
+        /// <summary>
+        /// Test gmail port in configuration file
+        /// </summary>
         [TestMethod]
         [TestTraits(Trait.Configuration)]
         public void GMailPort2()
