@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using MailLibrary;
@@ -31,7 +30,6 @@ namespace smtpUnitTests
                 Directory.GetFiles(mc.PickupFolder).ToList().ForEach(File.Delete);
             }
         }
-
 
         #region send email (there are no asserts)
 
@@ -128,6 +126,27 @@ namespace smtpUnitTests
         {
             var ops = new Operations(true, LogfileName);
             await ops.ExampleSend3Async(GmailConfiguration2, SendMessageToAddress).ConfigureAwait(false);
+        }
+        [TestMethod]
+        [TestTraits(Trait.SendingLiveSynchronousAttachments)]
+        public void SendingMultipleAttachmentsFromDisk()
+        {
+            var ops = new Operations();
+            ops.SendMultipleAttachementsFromDisk(GmailConfiguration2, SendMessageToAddress, 1);
+        }
+        [TestMethod]
+        [TestTraits(Trait.SendingLiveSynchronousEmbedImage)]
+        public void SendMessageWithEmbededImage()
+        {
+            var ops = new Operations();
+            ops.EmbedImageFromDisk(GmailConfiguration2,SendMessageToAddress);
+        }
+        [TestMethod]
+        [TestTraits(Trait.SendingLiveSynchronousAttachments)]
+        public void SendingMultipleAttachmentsByeArray()
+        {
+            var ops = new Operations();
+            ops.SendMultipleAttachementsFromByeArray(GmailConfiguration2, SendMessageToAddress, 1);
         }
 
         #endregion

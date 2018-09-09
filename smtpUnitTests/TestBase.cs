@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Net;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace smtpUnitTests
@@ -32,7 +29,24 @@ namespace smtpUnitTests
         /// File name to log, log file is in bin\debug folder
         /// </summary>
         protected string LogfileName = "Demo.txt";
+        /// <summary>
+        /// Brute force method to determine if a host is valid, in this case
+        /// from host setting in app.config
+        /// </summary>
+        /// <param name="host"></param>
+        /// <returns></returns>
+        public bool IsHostValid(string host)
+        {
+            try
+            {
+                Dns.GetHostEntry(host);
 
-
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
     }
 }

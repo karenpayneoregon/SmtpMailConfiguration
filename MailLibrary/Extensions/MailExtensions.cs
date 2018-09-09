@@ -31,5 +31,18 @@ namespace MailLibrary.Extensions
         {
             sender.Add(AlternateView.CreateAlternateViewFromString(message, null, "text/plain"));
         }
+        /// <summary>
+        /// Used for attaching files by byte array to email message.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="files"></param>
+        public static void AddFilesFromStream(this AttachmentCollection sender, string[] files)
+        {
+            foreach (var file in files)
+            {
+                var ba = new AttachmentByteArray() { FullFilename = file };
+                sender.Add(ba.Attachment);
+            }
+        }
     }
 }

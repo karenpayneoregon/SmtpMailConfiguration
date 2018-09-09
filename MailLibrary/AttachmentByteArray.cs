@@ -13,9 +13,16 @@ namespace MailLibrary
         /// <summary>
         /// Represents the name for the byte array in FileContent
         /// </summary>
-        public string Filename { get; set; }
+        public string FullFilename { get; set; }
         /// <summary>
-        /// Represents a file in a byte array
+        /// What displays to the read for the file name
+        /// </summary>
+        public string DisplayName => Path.GetFileName(FullFilename);
+        /// <summary>
+        /// Represents a file in a byte array. This property could be 
+        /// eliminated as in Attachement property File.ReadAllBytes
+        /// can be done inline with creating the MemoryStream but this
+        /// provides access to the array for debugging if needed.
         /// </summary>
         public byte[] FileContent { get; set; }
         /// <summary>
@@ -35,12 +42,11 @@ namespace MailLibrary
         {
             get
             {
+                FileContent = File.ReadAllBytes(FullFilename);
                 var stream = new MemoryStream(FileContent);
-                var attachment = new Attachment(stream, Filename);
+                var attachment = new Attachment(stream, DisplayName);
                 return attachment;
             }
         }
-
-
     }
 }

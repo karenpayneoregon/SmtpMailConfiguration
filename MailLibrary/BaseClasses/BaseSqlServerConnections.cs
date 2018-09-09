@@ -7,7 +7,7 @@ namespace MailLibrary.BaseClasses
         /// <summary> 
         /// This points to your database server 
         /// </summary> 
-        protected string DatabaseServer = "KARENS-PC";
+        protected string DatabaseServer = "KARENS-PC"; // Change to your database server name or for SQL-Express .\SQLEXPRESS
         /// <summary> 
         /// Name of database containing required tables 
         /// </summary> 

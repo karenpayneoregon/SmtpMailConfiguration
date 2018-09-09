@@ -3,6 +3,9 @@ using System.Data.SqlClient;
 
 namespace MailLibrary.BaseClasses
 {
+    /// <summary>
+    /// Provides a method for reading message content for emailing in the unit test project.
+    /// </summary>
     public class DataOperations : BaseSqlServerConnections
     {
         public DataOperations()

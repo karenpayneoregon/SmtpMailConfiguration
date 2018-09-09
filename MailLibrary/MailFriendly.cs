@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MailLibrary
+﻿namespace MailLibrary
 {
+    /// <summary>
+    /// Used for sending email message with user friendly name rather than an email address.
+    /// </summary>
     public class MailFriendly
     {
         /// <summary>

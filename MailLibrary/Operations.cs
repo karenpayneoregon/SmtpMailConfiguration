@@ -32,7 +32,6 @@ namespace MailLibrary
                 _writeToLog = true;
                 _LogInfo = new FileInfo(pFileName);
             }
-            
         }
         //
         /// <summary>
@@ -72,7 +71,6 @@ namespace MailLibrary
                 smtp.EnableSsl = mc.EnableSsl;
                 smtp.Send(mail);
             }
-
         }
         //
         /// <summary>
@@ -102,21 +100,16 @@ namespace MailLibrary
 
             mail.To.Add(pSendToo);
 
-            mail.ReplyToList.Add(new MailAddress("oregon@gmail.com"));
+            /*
+             * Using non-existing addresses for testing purposes
+             */
+            mail.ReplyToList.Add(new MailAddress("jane@gmail.com"));
             mail.ReplyToList.Add(new MailAddress("kevin@comcast.net"));
-
-            var plainMessage = AlternateView.CreateAlternateViewFromString(
-                data.TextMessage,
-                null, "text/plain");
-
-            var htmlMessage = AlternateView.CreateAlternateViewFromString(
-                data.HtmlMessage,
-                null, "text/html");
 
             mail.IsBodyHtml = true;
 
-            mail.AlternateViews.Add(plainMessage);
-            mail.AlternateViews.Add(htmlMessage);
+            mail.AlternateViews.PlainTextView(data.TextMessage);
+            mail.AlternateViews.HTmlView(data.HtmlMessage);
 
             using (var smtp = new SmtpClient(mc.Host, mc.Port))
             {
@@ -136,7 +129,6 @@ namespace MailLibrary
         {
             throw new NotImplementedException();
         }
-
         /// <summary>
         /// Helper method to create a MailAddress with friendly name for FROM or TO address
         /// </summary>
@@ -212,19 +204,10 @@ namespace MailLibrary
             };
 
             mail.To.Add(CreateFriendltAddress(pToAddress));
-
-            var plainMessage = AlternateView.CreateAlternateViewFromString(
-                data.TextMessage,
-                null, "text/plain");
-
-            var htmlMessage = AlternateView.CreateAlternateViewFromString(
-                data.HtmlMessage,
-                null, "text/html");
-
             mail.IsBodyHtml = true;
 
-            mail.AlternateViews.Add(plainMessage);
-            mail.AlternateViews.Add(htmlMessage);
+            mail.AlternateViews.PlainTextView(data.TextMessage);
+            mail.AlternateViews.HTmlView(data.HtmlMessage);
 
             using (var smtp = new SmtpClient(mc.Host, mc.Port))
             {
@@ -239,9 +222,7 @@ namespace MailLibrary
                 smtp.EnableSsl = !userPickupFolder;
                 smtp.Send(mail);
             }
-
         }
-
         /// <summary>
         /// Example for incorrect port used to send a email message.
         /// </summary>
@@ -337,7 +318,7 @@ namespace MailLibrary
         /// <param name="pConfigurationSection"></param>
         /// <param name="pSendToo"></param>
         /// <returns></returns>
-        public async Task ExampleSend3Async(string pConfigurationSection, string pSendToo)
+        public async Task ExampleSend3Async(string pConfigurationSection, string pSendToo, [CallerMemberName]string name = "")
         {
             var ops = new DataOperations();
             var data = ops.Read(5);
@@ -346,31 +327,23 @@ namespace MailLibrary
 
             var mail = new MailMessage
             {
-                Subject = $"Async message: {data.Description}",
+                Subject = $"Called from: {name}",
                 From = new MailAddress(mc.FromAddress)
             };
 
             mail.To.Add(pSendToo);
             mail.Priority = MailPriority.High;
-
-
-            var plainMessage = AlternateView.CreateAlternateViewFromString(data.TextMessage, null, "text/plain");
-            var htmlMessage = AlternateView.CreateAlternateViewFromString(
-                data.HtmlMessage, 
-                null, 
-                "text/html");
-
             mail.IsBodyHtml = true;
 
-            mail.AlternateViews.Add(plainMessage);
-            mail.AlternateViews.Add(htmlMessage);
+            mail.AlternateViews.PlainTextView(data.TextMessage);
+            mail.AlternateViews.HTmlView(data.HtmlMessage);
 
             //send the message
             var smtp = new SmtpClient(mc.Host, mc.Port)
             {
                 Credentials = new NetworkCredential(mc.UserName, mc.Password),
                 EnableSsl = mc.EnableSsl
-        };
+            };
 
 
             smtp.SendCompleted += Smtp_SendCompleted;
@@ -380,45 +353,139 @@ namespace MailLibrary
                 mail.Dispose();
             };
 
+            // ReSharper disable once AsyncConverter.AsyncAwaitMayBeElidedHighlighting
             await smtp.SendMailAsync(mail).ConfigureAwait(false);
 
         }
         #region For part 3 of this series - to be written shortly
+        /// <summary>
+        /// Example which sends all files in a specific folder
+        /// </summary>
+        /// <param name="pConfig">appropriate <see cref="MailConfiguration"/> item</param>
+        /// <param name="pSendToo">Valid email address to send message too</param>
+        /// <param name="identifier">SQL-Server table key</param>
+        /// <param name="name">Represents who called this method</param>
+        /// <remarks>
+        /// For a real application
+        /// - make sure the folder exists and there are files if this is a busness requirement.
+        /// </remarks>
+        public void SendMultipleAttachementsFromDisk(string pConfig, string pSendToo, int identifier, [CallerMemberName]string name = "")
+        {
+            var files = Directory.GetFiles(Path.Combine(AppDomain.CurrentDomain.BaseDirectory,"Files1"));
+            var ops = new DataOperations();
+            var data = ops.Read(identifier);
 
-        /// <summary>
-        /// Send attachment from physical file on disk into email
-        /// </summary>
-        public void SendSingleAttachmentFromDisk()
-        {
-            throw new NotImplementedException();
-        }
-        public void SendMultipleAttachementsFromDisk()
-        {
-            throw new NotImplementedException();
-        }
-        /// <summary>
-        /// Example for sending attachment via byte array into email
-        /// </summary>
-        public void SendSingleAttachmentFromMemory()
-        {
-            throw new NotImplementedException();
-        }
-        /// <summary>
-        /// Embed image from physical file into email
-        /// </summary>
-        public void EmbedImageFromDisk()
-        {
-            throw new NotImplementedException();
-        }
-        /// <summary>
-        /// Embed image from memory/array into email
-        /// </summary>
-        public void EmbedImageFromMemory()
-        {
-            throw new NotImplementedException();
-        }
+            var mc = new MailConfiguration(pConfig);
+            var mail = new MailMessage
+            {
+                From = new MailAddress(mc.FromAddress),
+                Subject = $"Sent from test: '{name}'"
+            };
 
+            mail.To.Add(pSendToo);
+            mail.IsBodyHtml = true;
+
+            mail.AlternateViews.PlainTextView(data.TextMessage);
+            mail.AlternateViews.HTmlView(data.HtmlMessage);
+
+            foreach (var file in files)
+            {
+                mail.Attachments.Add(new Attachment(file));
+            }
+
+            using (var smtp = new SmtpClient(mc.Host, mc.Port))
+            {
+                smtp.Credentials = new NetworkCredential(mc.UserName, mc.Password);
+                smtp.EnableSsl = mc.EnableSsl;
+                smtp.Send(mail);
+            }
+
+        }
+        /// <summary>
+        /// Add attachments from a folder were each file in the folder is added without
+        /// any conditions.
+        /// </summary>
+        /// <param name="pConfig">appropriate <see cref="MailConfiguration"/> item</param>
+        /// <param name="pSendToo">Valid email address to send message too</param>
+        /// <param name="identifier">SQL-Server table key</param>
+        /// <param name="name">Represents who called this method</param>
+        public void SendMultipleAttachementsFromByeArray(string pConfig, string pSendToo, int identifier, [CallerMemberName]string name = "")
+        {
+            var files = Directory.GetFiles(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Files1"));
+            var ops = new DataOperations();
+            var data = ops.Read(identifier);
+
+            var mc = new MailConfiguration(pConfig);
+            var mail = new MailMessage
+            {
+                From = new MailAddress(mc.FromAddress),
+                Subject = $"Sent from test: '{name}'"
+            };
+
+            mail.To.Add(pSendToo);
+            mail.IsBodyHtml = true;
+
+            mail.AlternateViews.PlainTextView(data.TextMessage);
+            mail.AlternateViews.HTmlView(data.HtmlMessage);
+            mail.Attachments.AddFilesFromStream(files);
+
+            using (var smtp = new SmtpClient(mc.Host, mc.Port))
+            {
+                smtp.Credentials = new NetworkCredential(mc.UserName, mc.Password);
+                smtp.EnableSsl = mc.EnableSsl;
+                smtp.Send(mail);
+            }
+        }
+        /// <summary>
+        /// Embed an image into an email message. In this sample the image is setup
+        /// within this method but could have been passed in as a parameter.
+        /// </summary>
+        /// <param name="pConfig">appropriate <see cref="MailConfiguration"/> item</param>
+        /// <param name="pSendToo">Valid email address to send message too</param>
+        /// <param name="name">Represents who called this method</param>
+        public void EmbedImageFromDisk(string pConfig, string pSendToo, [CallerMemberName]string name = "")
+        {
+            var mc = new MailConfiguration(pConfig);
+            var mail = new MailMessage
+            {
+                From = new MailAddress(mc.FromAddress),
+                Subject = $"Sent from test: '{name}'"
+            };
+
+            var plainMessage = AlternateView.CreateAlternateViewFromString(
+                "This email desires html",
+                null, "text/plain");
+
+                /*
+                *  This is the identifier for embeding an image into the email message.
+                *  A variable is used because the identifier is needed into two areas,
+                *  first in the AlternateView for HTML and secondly for the LinkedResource.
+                */
+            var imageIdentifier = "Miata";
+
+            var htmlMessage = AlternateView.CreateAlternateViewFromString(
+                $"<p>This is what I'm purchasing in <b>2019</b> to go along with my 2016 model.</p><img src=cid:{imageIdentifier}><p>Karen</p>",
+                null, "text/html");
+
+            var fileName = $"{Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Images1")}\\2017Miata.jpg";
+            var miataImage = new LinkedResource(fileName, "image/jpeg") {ContentId = imageIdentifier };
+            mail.AlternateViews.Add(plainMessage);
+            mail.AlternateViews.Add(htmlMessage);
+            htmlMessage.LinkedResources.Add(miataImage);
+
+            mail.To.Add(pSendToo);
+            mail.IsBodyHtml = true;
+
+            using (var smtp = new SmtpClient(mc.Host, mc.Port))
+            {
+                smtp.Credentials = new NetworkCredential(mc.UserName, mc.Password);
+                smtp.EnableSsl = mc.EnableSsl;
+                smtp.Send(mail);
+            }
+        }
         #endregion
+
+        #region Logging 
 
         /// <summary>
         /// Central code for writing to log file
@@ -439,6 +506,8 @@ namespace MailLibrary
                 Logger.ShutDown();
             }
         }
+
+        #endregion
         /// <summary>
         /// Callback for sending an email
         /// </summary>
@@ -456,6 +525,5 @@ namespace MailLibrary
                 WriteToLogFile("Sent", "Mail not sent");
             }
         }
-
     }
 }

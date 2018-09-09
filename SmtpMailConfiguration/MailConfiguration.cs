@@ -7,7 +7,6 @@ namespace SmtpMailConfiguration
 {
     public class MailConfiguration
     {
-
         private readonly SmtpSection _smtpSection;
 
         /// <summary>
@@ -46,7 +45,7 @@ namespace SmtpMailConfiguration
         {
             get
             {
-                string mailDrop = _smtpSection.SpecifiedPickupDirectory.PickupDirectoryLocation;
+                var mailDrop = _smtpSection.SpecifiedPickupDirectory.PickupDirectoryLocation;
 
                 if (mailDrop != null)
                 {

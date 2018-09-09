@@ -8,6 +8,8 @@ namespace smtpUnitTests
     {
         Configuration,
         SendingLiveSynchronous,
+        SendingLiveSynchronousAttachments,
+        SendingLiveSynchronousEmbedImage,
         SendingLiveAsynchronous,
         SendingPickupFolder
     }
