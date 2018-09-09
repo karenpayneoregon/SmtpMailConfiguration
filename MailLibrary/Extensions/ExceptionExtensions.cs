@@ -2,6 +2,9 @@
 
 namespace MailLibrary.Extensions
 {
+    /// <summary>
+    /// Helper methods for logging exceptions
+    /// </summary>
     public static class ExceptionExtensions
     {
         /// <summary>

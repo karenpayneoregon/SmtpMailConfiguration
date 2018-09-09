@@ -2,6 +2,9 @@
 
 namespace MailLibrary.Extensions
 {
+    /// <summary>
+    /// Helper extensions for creating email messages
+    /// </summary>
     public static class MailExtensions
     {
         /// <summary>
