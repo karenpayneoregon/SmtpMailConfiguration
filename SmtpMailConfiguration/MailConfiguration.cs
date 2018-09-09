@@ -87,7 +87,7 @@ namespace SmtpMailConfiguration
         /// </summary>
         /// <returns>A string with main properties</returns>
         public override string ToString() => $"From: [ {FromAddress} ]" +
-                                             $"Host: [{Host}] Port: [{Port}] "+ 
+                                             $"Host: [{Host}] Port: [{Port}] " +
                                              $"Pickup: {Directory.Exists(PickupFolder)}";
     }
 }

@@ -48,6 +48,8 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="TestBase.cs" />
+    <Compile Include="TestTraitsAttribute.cs" />
     <Compile Include="UnitTest1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -56,10 +58,18 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\MailLibrary\MailLibrary.csproj">
+      <Project>{1e9f5c83-4096-4e7d-8d6a-df65c0915c86}</Project>
+      <Name>MailLibrary</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SmtpMailConfiguration\SmtpMailConfiguration.csproj">
       <Project>{0689cb64-ffa4-42c0-b6d5-eef483cf2f81}</Project>
       <Name>SmtpMailConfiguration</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Scripts\script.sql" />
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
