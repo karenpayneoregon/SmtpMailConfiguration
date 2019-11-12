@@ -5,6 +5,9 @@ using MailLibrary;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SmtpMailConfiguration;
 
+/*
+ * https://myaccount.google.com/lesssecureapps
+ */
 namespace smtpUnitTests
 {
     /// <summary>
@@ -47,9 +50,9 @@ namespace smtpUnitTests
         {
             var ops = new Operations();
 
-            ops.ExampleSend1(GmailConfiguration2, SendMessageToAddress, 1);
-            ops.ExampleSend1(GmailConfiguration2, SendMessageToAddress, 2);
-            ops.ExampleSend1(GmailConfiguration2, SendMessageToAddress, 2);
+            ops.ExampleSend1(ComcastConfiguration, SendMessageToAddress, 1);
+            ops.ExampleSend1(ComcastConfiguration, SendMessageToAddress, 2);
+            ops.ExampleSend1(ComcastConfiguration, SendMessageToAddress, 2);
 
         }
         /// <summary>
@@ -63,7 +66,7 @@ namespace smtpUnitTests
         {
 
             var ops = new Operations();
-            ops.ExampleSendWithRepyToList(GmailConfiguration2, SendMessageToAddress, 1);
+            ops.ExampleSendWithRepyToList(ComcastConfiguration, SendMessageToAddress, 1);
 
         }
         /// <summary>
@@ -77,7 +80,7 @@ namespace smtpUnitTests
             var toData = new MailFriendly() { Address = SendMessageToAddress, Display = "Karen", };
 
             var ops = new Operations();
-            ops.ExampleSendMaskNames(GmailConfiguration2, 5,fromData,toData);
+            ops.ExampleSendMaskNames(ComcastConfiguration, 5,fromData,toData);
         }
 
         [TestMethod]
@@ -101,8 +104,14 @@ namespace smtpUnitTests
         [TestTraits(Trait.SendingLiveSynchronous)]
         public void ExampleSend1_BadHost()
         {
-            var ops = new MailLibrary.Operations(true, LogfileName);
+            var ops = new Operations(true, LogfileName);
             ops.ExampleSend2(GmailConfiguration2, SendMessageToAddress, 4);
+        }
+        [TestMethod]
+        public void ExampleSend1_CustomClient()
+        {
+            var ops = new Operations(true, LogfileName);
+            ops.ExampleSendCustomClient(GmailConfiguration2, SendMessageToAddress, 4);
         }
         /// <summary>
         /// Send an email with callback. This is a successful send unless
@@ -125,7 +134,7 @@ namespace smtpUnitTests
         public async Task ExampleSend1_WithSendComplete_NoErrorsAsync()
         {
             var ops = new Operations(true, LogfileName);
-            await ops.ExampleSend3Async(GmailConfiguration2, SendMessageToAddress).ConfigureAwait(false);
+            await ops.ExampleSend3Async(ComcastConfiguration, SendMessageToAddress).ConfigureAwait(false);
         }
         [TestMethod]
         [TestTraits(Trait.SendingLiveSynchronousAttachments)]
@@ -139,14 +148,14 @@ namespace smtpUnitTests
         public void SendMessageWithEmbededImage()
         {
             var ops = new Operations();
-            ops.EmbedImageFromDisk(GmailConfiguration2,SendMessageToAddress);
+            ops.EmbedImageFromDisk(GmailConfiguration2, SendMessageToAddress);
         }
         [TestMethod]
         [TestTraits(Trait.SendingLiveSynchronousAttachments)]
         public void SendingMultipleAttachmentsByeArray()
         {
             var ops = new Operations();
-            ops.SendMultipleAttachementsFromByeArray(GmailConfiguration2, SendMessageToAddress, 1);
+            ops.SendMultipleAttachementsFromByeArray(ComcastConfiguration, SendMessageToAddress, 1);
         }
 
         #endregion
@@ -288,6 +297,7 @@ namespace smtpUnitTests
                 "Wrong from address for Comcast");
         }
         [TestMethod]
+        [Ignore]
         [TestTraits(Trait.Configuration)]
         public void ComcastUserName()
         {

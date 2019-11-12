@@ -1,6 +1,7 @@
 ﻿using SmtpMailConfiguration;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -61,7 +62,7 @@ namespace MailLibrary
 
             mail.To.Add(pSendToo);
             mail.IsBodyHtml = true;
-            
+
             mail.AlternateViews.PlainTextView(data.TextMessage);
             mail.AlternateViews.HTmlView(data.HtmlMessage);
 
@@ -146,7 +147,7 @@ namespace MailLibrary
         /// <param name="pFromAddress"></param>
         /// <param name="pToAddress"></param>
         /// <param name="name">Method name as default with an empty string</param>
-        public void ExampleSendMaskNames(string pConfig, int identifier, MailFriendly pFromAddress, MailFriendly pToAddress,  [CallerMemberName]string name = "")
+        public void ExampleSendMaskNames(string pConfig, int identifier, MailFriendly pFromAddress, MailFriendly pToAddress, [CallerMemberName]string name = "")
         {
             var ops = new DataOperations();
             var data = ops.Read(identifier);
@@ -154,12 +155,12 @@ namespace MailLibrary
             var mc = new MailConfiguration(pConfig);
             var mail = new MailMessage
             {
-                From = CreateFriendltAddress(pFromAddress), 
+                From = CreateFriendltAddress(pFromAddress),
                 Subject = $"Sent from test: '{name}'"
             };
 
             mail.To.Add(CreateFriendltAddress(pToAddress));
-            
+
             var plainMessage = AlternateView.CreateAlternateViewFromString(
                 data.TextMessage,
                 null, "text/plain");
@@ -191,7 +192,7 @@ namespace MailLibrary
         /// <param name="pToAddress"></param>
         /// <param name="userPickupFolder">Toggle between sending live or sending to file</param>
         /// <param name="name">Method name as default with an empty string</param>
-        public void UsePickupFolderExample(string pConfig, int identifier, MailFriendly pFromAddress, MailFriendly pToAddress,bool userPickupFolder = true, [CallerMemberName]string name = "")
+        public void UsePickupFolderExample(string pConfig, int identifier, MailFriendly pFromAddress, MailFriendly pToAddress, bool userPickupFolder = true, [CallerMemberName]string name = "")
         {
             var ops = new DataOperations();
             var data = ops.Read(identifier);
@@ -199,7 +200,7 @@ namespace MailLibrary
             var mc = new MailConfiguration(pConfig);
             var mail = new MailMessage
             {
-                From = CreateFriendltAddress(pFromAddress), 
+                From = CreateFriendltAddress(pFromAddress),
                 Subject = $"Sent from test: '{name}'"
             };
 
@@ -245,13 +246,13 @@ namespace MailLibrary
             mail.To.Add(pSendToo);
 
             var plainMessage = AlternateView.CreateAlternateViewFromString(
-                data.TextMessage, 
-                null, 
+                data.TextMessage,
+                null,
                 "text/plain");
 
             var htmlMessage = AlternateView.CreateAlternateViewFromString(
-                data.HtmlMessage, 
-                null, 
+                data.HtmlMessage,
+                null,
                 "text/html");
 
             mail.IsBodyHtml = true;
@@ -283,10 +284,10 @@ namespace MailLibrary
                             }
 
                         case SmtpException _:
-                        {                           
+                            {
                                 if (_writeToLog)
                                 {
-                                    WriteToLogFile("General SmtpException", $"{generalException.GetExceptionMessages()}, Status code: {((SmtpException) generalException).StatusCode}");
+                                    WriteToLogFile("General SmtpException", $"{generalException.GetExceptionMessages()}, Status code: {((SmtpException)generalException).StatusCode}");
                                 }
                                 break;
                             }
@@ -310,6 +311,94 @@ namespace MailLibrary
                     }
                 }
             }
+        }
+        public void ExampleSendCustomClient(string pConfig, string pSendToo, int identifier, [CallerMemberName]string name = "")
+        {
+            var ops = new DataOperations();
+            var data = ops.Read(identifier);
+
+            var mc = new MailConfiguration(pConfig);
+            var mail = new MailMessage
+            {
+                From = new MailAddress(mc.FromAddress),
+                Subject = $"Sent from test: '{name}' with custom client"
+            };
+
+            mail.To.Add(pSendToo);
+
+            var plainMessage = AlternateView.CreateAlternateViewFromString(
+                data.TextMessage,
+                null,
+                "text/plain");
+
+            var htmlMessage = AlternateView.CreateAlternateViewFromString(
+                data.HtmlMessage,
+                null,
+                "text/html");
+
+            mail.IsBodyHtml = true;
+
+            mail.AlternateViews.Add(plainMessage);
+            mail.AlternateViews.Add(htmlMessage);
+
+            var smtp = new SmtpClientCustom(mc.Host, mc.Port)
+            {
+                Credentials = new NetworkCredential(mc.UserName, mc.Password),
+                EnableSsl = mc.EnableSsl
+            };
+
+            smtp.SendCompleted += Smtp_SendCompleted;
+
+            smtp.SendCompleted += (s, e) =>
+            {
+                smtp.Dispose();
+                mail.Dispose();
+            };
+
+            try
+            {
+                smtp.SendAsync(mail,mail);
+            }
+            catch (Exception generalException)
+            {
+                switch (generalException)
+                {
+                    case SmtpFailedRecipientsException _:
+                        {
+                            if (_writeToLog)
+                            {
+                                WriteToLogFile("SmtpFailedRecipientsException", generalException.GetExceptionMessages());
+                            }
+                            break;
+                        }
+
+                    case SmtpException _:
+                        {
+                            if (_writeToLog)
+                            {
+                                WriteToLogFile("General SmtpException", $"{generalException.GetExceptionMessages()}, Status code: {((SmtpException)generalException).StatusCode}");
+                            }
+                            break;
+                        }
+
+                    default:
+                        if (_writeToLog)
+                        {
+                            Logger.Start(_LogInfo);
+                            try
+                            {
+                                // ReSharper disable once PossibleInvalidCastException
+                                WriteToLogFile("General Exception", $"{generalException.GetExceptionMessages()}, Status code: {((SmtpException)generalException).StatusCode}");
+                            }
+                            finally
+                            {
+                                Logger.ShutDown();
+                            }
+                        }
+
+                        break;
+                }
+            } 
         }
         /// <summary>
         /// Send email with a callback, not no using statement is used as 
@@ -348,7 +437,8 @@ namespace MailLibrary
 
             smtp.SendCompleted += Smtp_SendCompleted;
 
-            smtp.SendCompleted += (s, e) => {
+            smtp.SendCompleted += (s, e) =>
+            {
                 smtp.Dispose();
                 mail.Dispose();
             };
@@ -371,7 +461,7 @@ namespace MailLibrary
         /// </remarks>
         public void SendMultipleAttachementsFromDisk(string pConfig, string pSendToo, int identifier, [CallerMemberName]string name = "")
         {
-            var files = Directory.GetFiles(Path.Combine(AppDomain.CurrentDomain.BaseDirectory,"Files1"));
+            var files = Directory.GetFiles(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Files1"));
             var ops = new DataOperations();
             var data = ops.Read(identifier);
 
@@ -456,11 +546,11 @@ namespace MailLibrary
                 "This email desires html",
                 null, "text/plain");
 
-                /*
-                *  This is the identifier for embeding an image into the email message.
-                *  A variable is used because the identifier is needed into two areas,
-                *  first in the AlternateView for HTML and secondly for the LinkedResource.
-                */
+            /*
+            *  This is the identifier for embeding an image into the email message.
+            *  A variable is used because the identifier is needed into two areas,
+            *  first in the AlternateView for HTML and secondly for the LinkedResource.
+            */
             var imageIdentifier = "Miata";
 
             var htmlMessage = AlternateView.CreateAlternateViewFromString(
@@ -468,7 +558,7 @@ namespace MailLibrary
                 null, "text/html");
 
             var fileName = $"{Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Images1")}\\2017Miata.jpg";
-            var miataImage = new LinkedResource(fileName, "image/jpeg") {ContentId = imageIdentifier };
+            var miataImage = new LinkedResource(fileName, "image/jpeg") { ContentId = imageIdentifier };
             mail.AlternateViews.Add(plainMessage);
             mail.AlternateViews.Add(htmlMessage);
             htmlMessage.LinkedResources.Add(miataImage);
@@ -513,12 +603,27 @@ namespace MailLibrary
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void Smtp_SendCompleted(object sender, System.ComponentModel.AsyncCompletedEventArgs e)
+        private void Smtp_SendCompleted(object sender, AsyncCompletedEventArgs e)
         {
-            
+            var testClient = (SmtpClientCustom)sender;
+
             if (e.Cancelled == false && e.Error == null)
             {
-                WriteToLogFile("Sent","Mail sent");
+                WriteToLogFile("Sent", "Mail sent");
+            }
+            else
+            {
+                WriteToLogFile("Sent", "Mail not sent");
+            }
+        }
+        private void Smtp_SendCompleted1(object sender, AsyncCompletedEventArgs e)
+        {
+
+            var testClient = (SmtpClientCustom)sender;
+
+            if (e.Cancelled == false && e.Error == null)
+            {
+                WriteToLogFile("Sent", "Mail sent");
             }
             else
             {
