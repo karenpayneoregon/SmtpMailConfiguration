@@ -48,6 +48,7 @@
     <Compile Include="BaseClasses\DataOperations.cs" />
     <Compile Include="EmailLogger.cs" />
     <Compile Include="EmailSniffer.cs" />
+    <Compile Include="ExceptionExtensions.cs" />
     <Compile Include="Extensions\ExceptionExtensions.cs" />
     <Compile Include="Extensions\MailExtensions.cs" />
     <Compile Include="MailFriendly.cs" />

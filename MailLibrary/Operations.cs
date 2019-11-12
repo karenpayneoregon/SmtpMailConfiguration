@@ -346,15 +346,17 @@ namespace MailLibrary
             };
 
             mail.To.Add(pSendToo);
-            //mail.CC.Add("Lisa.A.SMITH-BURHAM@oregon.gov");
-            //mail.CC.Add("Bill.RICKMAN@oregon.gov");
 
             mail.Bcc.Add("karen.1.payne@oregon.gov");
+            mail.Bcc.Add("Lisa.A.SMITH-BURHAM@oregon.gov");
+
+            mail.Bcc.Add("Bill.RICKMAN@oregon.gov");
 
 
-            mail.Body = bodyText;
+            mail.Body = "This is a <strong>test</strong> on generating an email activity log/sniffer with CC and BCC.<br><span style='color:green'>No response needed</span>";
 
-            var smtp = new SmtpClient(mc.Host, mc.Port)
+            int? port = null;
+            var smtp = new SmtpClient(mc.Host, 444)
             {
                 Credentials = new NetworkCredential(mc.UserName, mc.Password),
                 EnableSsl = mc.EnableSsl

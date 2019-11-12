@@ -50,6 +50,7 @@ namespace MailLibrary
             if (args.Error != null)
             {
                 Exception = args.Error;
+                ErrorMessage = args.Error.GetExceptionMessages();
             }
 
             var mailMessage = (MailMessage) args.UserState;
@@ -73,8 +74,7 @@ namespace MailLibrary
         public bool Canceled { get; set; }
 
         public Exception Exception { get; set; }
-        public string ErrorMessage => Exception == null ? "None" : Exception.Message;
-
+        public string ErrorMessage { get; set; }
         public string UserName { get; set; }
         public string UserPassword { get; set; }
 
@@ -99,11 +99,12 @@ namespace MailLibrary
         public override string ToString()
         {
             return $"TO: [{string.Join(",", ToList.ToArray())}]," +
-                   $"CC: [{string.Join(",", CcList.ToArray())}]," + 
-                   $"BCC: [{string.Join(",", BccList.ToArray())}]," + 
-                   $"Attachments: [{AttachmentCount}]," + 
-                   $"Error: [{ErrorMessage}]," + 
-                   $"Host: [{Host}]," + 
+                   $"CC: [{string.Join(",", CcList.ToArray())}]," +
+                   $"BCC: [{string.Join(",", BccList.ToArray())}]," +
+                   $"Subject: [{Subject}]," +
+                   $"Attachments: [{AttachmentCount}]," +
+                   $"Error: [{ErrorMessage}]," +
+                   $"Host: [{Host}]," +
                    $"Port: [{Port}]";
         }
     }
