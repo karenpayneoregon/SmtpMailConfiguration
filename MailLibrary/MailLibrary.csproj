@@ -46,6 +46,8 @@
     <Compile Include="BaseClasses\BaseSqlServerConnections.cs" />
     <Compile Include="CannedMessages.cs" />
     <Compile Include="BaseClasses\DataOperations.cs" />
+    <Compile Include="EmailLogger.cs" />
+    <Compile Include="EmailSniffer.cs" />
     <Compile Include="Extensions\ExceptionExtensions.cs" />
     <Compile Include="Extensions\MailExtensions.cs" />
     <Compile Include="MailFriendly.cs" />

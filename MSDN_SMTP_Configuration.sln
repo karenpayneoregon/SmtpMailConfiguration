@@ -22,6 +22,8 @@ Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "0WindowsApp2", "0WindowsApp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestingCustom", "TestingCustom\TestingCustom.csproj", "{874153AC-A5F7-40A4-8293-9DBF95451520}"
 EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "WindowsApp1", "WindowsApp1\WindowsApp1.vbproj", "{4365DB21-52DC-4D88-9F97-6B54515A72AD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -56,6 +58,10 @@ Global
 		{874153AC-A5F7-40A4-8293-9DBF95451520}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{874153AC-A5F7-40A4-8293-9DBF95451520}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{874153AC-A5F7-40A4-8293-9DBF95451520}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4365DB21-52DC-4D88-9F97-6B54515A72AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4365DB21-52DC-4D88-9F97-6B54515A72AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4365DB21-52DC-4D88-9F97-6B54515A72AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4365DB21-52DC-4D88-9F97-6B54515A72AD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -10,6 +11,7 @@ using System.Threading.Tasks;
 using System.Net.Mail;
 using System.Runtime.CompilerServices;
 using System.Threading;
+using System.Xml;
 using LoggingLibrary;
 using MailLibrary.BaseClasses;
 using MailLibrary.Extensions;
@@ -264,7 +266,7 @@ namespace MailLibrary
             {
                 smtp.Credentials = new NetworkCredential(mc.UserName, mc.Password);
                 smtp.EnableSsl = mc.EnableSsl;
-                smtp.SendCompleted += Smtp_SendCompleted;
+                smtp.SendCompleted += OED_SendCompleted;
 
                 try
                 {
@@ -312,6 +314,106 @@ namespace MailLibrary
                 }
             }
         }
+
+        public XmlDocument EmailXmlDocument()
+        {
+            var emailBody = new XmlDocument();
+            emailBody.Load("EmployerNotificationEmailTemplate.xml");
+
+            return emailBody;
+        }
+        public string EmailBodyFromXml()
+        {
+            // ReSharper disable once PossibleNullReferenceException
+            return EmailXmlDocument().SelectNodes("/email/body")[0].InnerText;
+        }
+
+        public void OED_1(string pConfig, string pSendToo, int identifier, [CallerMemberName] string name = "")
+        {
+
+            var bodyText = EmailBodyFromXml();
+            bodyText = bodyText.Replace("##E_RESPONSE_URL##", "https://testuisides.org");
+            bodyText = bodyText.Replace("##PIN##","5555");
+            bodyText = bodyText.Replace("##EMPLOYER_NAME##","ABC Inc");
+            bodyText = bodyText.Replace("##CLAIMANT_SSN##", "555-55-5555");
+            bodyText = bodyText.Replace("##RESPONSE_DUE_DATE##",DateTime.Now.AddDays(30).ToString("D"));
+            var mc = new MailConfiguration(pConfig);
+            var mail = new MailMessage
+            {
+                From = new MailAddress(mc.FromAddress),
+                Subject = "Testing email for S I D E S",
+                IsBodyHtml = true
+            };
+
+            mail.To.Add(pSendToo);
+            //mail.CC.Add("Lisa.A.SMITH-BURHAM@oregon.gov");
+            //mail.CC.Add("Bill.RICKMAN@oregon.gov");
+
+            mail.Bcc.Add("karen.1.payne@oregon.gov");
+
+
+            mail.Body = bodyText;
+
+            var smtp = new SmtpClient(mc.Host, mc.Port)
+            {
+                Credentials = new NetworkCredential(mc.UserName, mc.Password),
+                EnableSsl = mc.EnableSsl
+            };
+
+            smtp.SendCompleted += OED_SendCompleted;
+
+            smtp.SendCompleted += (s, e) =>
+            {
+                smtp.Dispose();
+                mail.Dispose();
+            };
+
+            try
+            {
+                smtp.SendAsync(mail, mail);
+            }
+            catch (Exception generalException)
+            {
+                switch (generalException)
+                {
+                    case SmtpFailedRecipientsException _:
+                        {
+                            if (_writeToLog)
+                            {
+                                WriteToLogFile("SmtpFailedRecipientsException", generalException.GetExceptionMessages());
+                            }
+                            break;
+                        }
+
+                    case SmtpException _:
+                        {
+                            if (_writeToLog)
+                            {
+                                WriteToLogFile("General SmtpException", $"{generalException.GetExceptionMessages()}, Status code: {((SmtpException)generalException).StatusCode}");
+                            }
+                            break;
+                        }
+
+                    default:
+                        if (_writeToLog)
+                        {
+                            Logger.Start(_LogInfo);
+                            try
+                            {
+                                // ReSharper disable once PossibleInvalidCastException
+                                WriteToLogFile("General Exception", $"{generalException.GetExceptionMessages()}, Status code: {((SmtpException)generalException).StatusCode}");
+                            }
+                            finally
+                            {
+                                Logger.ShutDown();
+                            }
+                        }
+
+                        break;
+                }
+            }
+
+        }
         public void ExampleSendCustomClient(string pConfig, string pSendToo, int identifier, [CallerMemberName]string name = "")
         {
             var ops = new DataOperations();
@@ -321,10 +423,14 @@ namespace MailLibrary
             var mail = new MailMessage
             {
                 From = new MailAddress(mc.FromAddress),
-                Subject = $"Sent from test: '{name}' with custom client"
+                Subject = "Testing email for S I D E S"
             };
 
             mail.To.Add(pSendToo);
+            mail.CC.Add("Lisa.A.SMITH-BURHAM@oregon.gov");
+            mail.CC.Add("Bill.RICKMAN@oregon.gov");
+
+            mail.Bcc.Add("karen.1.payne@oregon.gov");
 
             var plainMessage = AlternateView.CreateAlternateViewFromString(
                 data.TextMessage,
@@ -347,7 +453,7 @@ namespace MailLibrary
                 EnableSsl = mc.EnableSsl
             };
 
-            smtp.SendCompleted += Smtp_SendCompleted;
+            smtp.SendCompleted += OED_SendCompleted;
 
             smtp.SendCompleted += (s, e) =>
             {
@@ -435,14 +541,16 @@ namespace MailLibrary
             };
 
 
-            smtp.SendCompleted += Smtp_SendCompleted;
+            smtp.SendCompleted += OED_SendCompleted;
 
             smtp.SendCompleted += (s, e) =>
             {
+                Console.WriteLine("Disposing");
                 smtp.Dispose();
                 mail.Dispose();
             };
 
+            Console.WriteLine("Sending");
             // ReSharper disable once AsyncConverter.AsyncAwaitMayBeElidedHighlighting
             await smtp.SendMailAsync(mail).ConfigureAwait(false);
 
@@ -602,33 +710,38 @@ namespace MailLibrary
         /// Callback for sending an email
         /// </summary>
         /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Smtp_SendCompleted(object sender, AsyncCompletedEventArgs e)
+        /// <param name="eventArguments"></param>
+        private void OED_SendCompleted(object sender, AsyncCompletedEventArgs eventArguments)
         {
-            var testClient = (SmtpClientCustom)sender;
+            var emailMessageContainer = new EmailSniffer();
 
-            if (e.Cancelled == false && e.Error == null)
+            if (eventArguments.UserState is MailMessage mailMessage)
             {
-                WriteToLogFile("Sent", "Mail sent");
+
+                emailMessageContainer.Inspect((SmtpClient)sender, eventArguments);
+
             }
             else
             {
-                WriteToLogFile("Sent", "Mail not sent");
+                emailMessageContainer.Inspect();
             }
         }
-        private void Smtp_SendCompleted1(object sender, AsyncCompletedEventArgs e)
+        private void Smtp_SendCompleted1(object sender, AsyncCompletedEventArgs eventArguments)
         {
+            var emailMessageContainer = new EmailSniffer();
 
-            var testClient = (SmtpClientCustom)sender;
-
-            if (e.Cancelled == false && e.Error == null)
+            if (eventArguments.UserState is MailMessage mailMessage)
             {
-                WriteToLogFile("Sent", "Mail sent");
+
+                emailMessageContainer.Inspect((SmtpClient)sender, eventArguments);
+
             }
             else
             {
-                WriteToLogFile("Sent", "Mail not sent");
+                emailMessageContainer.Inspect();
             }
+
         }
     }
+
 }

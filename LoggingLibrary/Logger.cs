@@ -36,7 +36,14 @@ namespace LoggingLibrary
             TargetLogFile = targetLogFile;
             VerifyTargetDirectory();
 
-            Timer.Change(BatchInterval, Timeout.Infinite); // A one-off tick event that is reset every time.
+            try
+            {
+                Timer.Change(BatchInterval, Timeout.Infinite); // A one-off tick event that is reset every time.
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Oh my");
+            }
         }
 
         private static void VerifyTargetDirectory()
